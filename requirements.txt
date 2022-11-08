@@ -1,8 +1,6 @@
 ftfy==6.1.1
 lpips==0.1.4
 regex==2021.10.8
-torch==1.7.1
-torchvision==0.8.2
 pytorch-lightning==1.5.10
 einops==0.3.0
 omegaconf==2.0.0
@@ -13,3 +11,4 @@ git+https://github.com/openai/CLIP.git
 albumentations==0.4.3
 kornia==0.5.11
 Pillow==9.0.1
+Ninja
