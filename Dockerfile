@@ -2,7 +2,7 @@ FROM nvidia/cuda:11.1.1-cudnn8-devel-ubuntu18.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update
-RUN apt-get install -y git curl python3.8 python3.8-dev python3.8-distutils
+RUN apt-get install -y git curl python3.8 python3.8-dev python3.8-distutils nano
 RUN alias python=python3.8 && echo 'alias python=python3.8' >> ~/.bashrc
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3.8 get-pip.py
 
