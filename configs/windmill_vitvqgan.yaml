@@ -43,7 +43,7 @@ model:
 dataset:
     target: enhancing.dataloader.DataModuleFromConfig
     params:
-        batch_size: 4
+        batch_size: 16
         num_workers: 8
         train:
             target: enhancing.dataloader.imagenet.ImageNetTrain
