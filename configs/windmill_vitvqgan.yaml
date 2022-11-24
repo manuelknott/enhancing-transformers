@@ -2,11 +2,11 @@ model:
     target: enhancing.modules.stage2.transformer.CondTransformer
     params:
         cond_key: class
-        cond: 
+        cond:
             target: enhancing.modules.cond.dummycond.ClassCond
             params:
                 image_size: 256
-                class_name: assets/class/imagenet.txt
+                class_name: assets/class/imagenet_dogs.txt
         stage1:
             target: enhancing.modules.stage1.vitvqgan.ViTVQ
             params:
@@ -32,27 +32,27 @@ model:
         transformer:
             target: enhancing.modules.stage2.layers.GPT
             params:
-                vocab_cond_size: 1000
+                vocab_cond_size: 89
                 vocab_img_size: 8192
-                embed_dim: 768
+                embed_dim: 3072
                 cond_num_tokens: 1
-                img_num_tokens: 1024 
+                img_num_tokens: 1024
                 n_heads: 12
                 n_layers: 12
-                
+
 dataset:
     target: enhancing.dataloader.DataModuleFromConfig
     params:
-        batch_size: 1
-        num_workers: 24
+        batch_size: 4
+        num_workers: 8
         train:
             target: enhancing.dataloader.imagenet.ImageNetTrain
             params:
-                root: /datasets/public/imagenet
+                root: /data/mknott/imagenet_dogs
                 resolution: 256
-                
+
         validation:
             target: enhancing.dataloader.imagenet.ImageNetValidation
             params:
-                root: /datasets/public/imagenet
+                root: /data/mknott/imagenet_dogs
                 resolution: 256
