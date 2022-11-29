@@ -4,6 +4,7 @@
 # ------------------------------------------------------------------------------------
 
 import os
+import re
 import random
 import importlib
 import pathlib
@@ -39,6 +40,21 @@ def get_obj_from_str(name: str, reload: bool = False) -> ClassVar:
 def initialize_from_config(config: OmegaConf) -> object:
     return get_obj_from_str(config["target"])(**config.get("params", dict()))
 
+
+def initialize_from_checkpoint(config: OmegaConf, ckpt: str) -> object:
+    ckpt_path = get_checkpoint_path(ckpt)
+    print(f"Loading model from checkpoint: {ckpt_path}")
+    return initialize_from_config(config).load_from_checkpoint(ckpt_path)
+
+
+def get_checkpoint_path(project: str):
+    foldrs = os.listdir(f"experiments/{project}")
+    foldrs = [datetime.strptime(x, '%d%m%Y_%H%M%S') for x in foldrs]
+    latest_foldrs = max(foldrs).strftime('%d%m%Y_%H%M%S')
+    ckpts = [x for x in os.listdir(f"experiments/{project}/{latest_foldrs}/ckpt") if x.endswith("ckpt")]
+    ckpt_nums = [int(re.findall(r"epoch=(\d+).ckpt", x)[0]) for x in ckpts]
+    max_idx = ckpt_nums.index(max(ckpt_nums))
+    return f"experiments/{project}/{latest_foldrs}/ckpt/{ckpts[max_idx]}"
 
 def setup_callbacks(exp_config: OmegaConf, config: OmegaConf) -> Tuple[List[Callback], WandbLogger]:
     now = datetime.now().strftime('%d%m%Y_%H%M%S')

@@ -11,11 +11,12 @@ from pathlib import Path
 from omegaconf import OmegaConf
 import pytorch_lightning as pl
 
-from enhancing.utils.general import get_config_from_file, initialize_from_config, setup_callbacks
+from enhancing.utils.general import get_config_from_file, initialize_from_config, initialize_from_checkpoint, setup_callbacks
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', type=str, required=True)
+    parser.add_argument('-cp', '--checkpoint', type=str, default=None)
     parser.add_argument('-s', '--seed', type=int, default=0)
     parser.add_argument('-nn', '--num_nodes', type=int, default=1)
     parser.add_argument('-ng', '--num_gpus', type=int, default=1)
@@ -37,8 +38,11 @@ if __name__ == '__main__':
                                    "max_images": args.max_images})
 
     # Build model
-    model = initialize_from_config(config.model)
-    model.learning_rate = exp_config.base_lr
+    if args.checkpoint is not None:
+        model = initialize_from_checkpoint(config.model, args.checkpoint)
+    else:
+        model = initialize_from_config(config.model)
+        model.learning_rate = exp_config.base_lr
 
     # Setup callbacks
     callbacks, logger = setup_callbacks(exp_config, config)
